@@ -4,7 +4,7 @@
 # Prerequisites
 
 To execute and test this project, you will need a kubernetes cluster running.
-It has been tested with a k3d cluster running locally.
+It has been tested with a k3d cluster running locally as well as have helm installed.
 
 # Requirements
 
@@ -21,6 +21,12 @@ kubectl apply -k ./infra
 
 This will deploy everything in the `ssi` namespace.
 To test that everything is working, you can connect to the web application. For that, you will need to get the external API of the `agg` service and use the port 8080. Normally, you should see a simple text message as a response with a verb and a noun.
+
+To access the application, you need to retrieve its ip:
+```
+kubectl get svc -n ssi agg
+```
+and then you can connect to the aggregator at: http://<EXTERNAL_IP>:8080.
 
 # Kyverno
 
@@ -64,3 +70,39 @@ You can check it with these commands:
 kubectl get pods -n ssi
 kubectl exec <podname> -n ssi -- id
 ```
+
+# Falco
+
+Install Falco
+```
+helm repo add falcosecurity https://falcosecurity.github.io/charts
+helm repo update
+helm install --replace falco --namespace falco --create-namespace --set tty=true falcosecurity/falco --set driver.kind=modern_ebpf --set falcosidekick.enabled=true --set falcosidekick.webui.enabled=true
+```
+
+**To view the Falco UI:**  
+
+While in development, you can simply forward the port:
+```
+kubectl port-forward svc/falco-falcosidekick-ui -n falco 2802
+```
+and view it on http://localhots/2302
+
+Please note that the default login and password for falco are `admin` and `admin`.
+
+For production use, you can update the file ./infra/falco/ingress.yaml with your hostname. Then, just apply the file with:
+```
+kubectl apply -f infra/falco/ingress.yaml
+```
+
+If you want to simulate the dns on your local machine, simply add a new line in your `/etc/hosts` file:
+```
+<EXTERNAL_IP> falco.local
+```
+Instead of falco.local you can put another hostname, but you will need to change it in the ingress.yaml file too.
+The external ip can be found by looking at the traefik of our kubernetes system. Please note that this implies that your load balancer is traefik, if you have set up something else, you might need to adapt this command.
+```
+kubectl get svc -n kube-system traefik
+```
+
+Then you should be able to access the Falco Sidekick UI at http://falco.local.

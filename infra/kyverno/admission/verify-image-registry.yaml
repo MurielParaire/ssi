@@ -16,6 +16,8 @@ spec:
       - resources:
           kinds:
             - Pod
+          namespaces: # only setting for ssi to allow Falco to install itself properly
+            - ssi
     validate:
       message: "Only images from ghcr.io/murielparaire/ssi/ are accepted"
       pattern:

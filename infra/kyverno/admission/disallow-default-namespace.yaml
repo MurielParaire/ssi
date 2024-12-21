@@ -16,6 +16,12 @@ spec:
       - resources:
           kinds:
             - Pod
+    exclude:
+      any:
+      - resources:
+          kinds:
+            - Pod
+          name: "*falco*" # To let falco be able to install itself
     validate:
       message: "Default namespace is not allowed"
       pattern:
@@ -26,7 +32,6 @@ spec:
       any:
       - resources:
           kinds:
-          - DaemonSet
           - Deployment
           - Job
           - StatefulSet
