@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: verbs
+  namespace: ssi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: verbs
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: verbs
+    spec:
+      imagePullSecrets:
+        - name: my-github
+      containers:
+        - name: verbs
+          image: ghcr.io/murielparaire/ssi/verbs:latest
+          imagePullPolicy: Always
+          ports:
+            - name: verbs-port
+              containerPort: 3001
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3001
+            initialDelaySeconds: 15
+            timeoutSeconds: 3
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3001
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 10
