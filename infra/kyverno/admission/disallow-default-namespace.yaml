@@ -1,0 +1,37 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: disallow-default-namespace
+  annotations:
+    policies.kyverno.io/title: Disallow Default Namespace
+    policies.kyverno.io/subject: Pod
+    policies.kyverno.io/description: default namespace is not allowed to be used to deploy pods    
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+  - name: disallow-default-namespace
+    match:
+      any:
+      - resources:
+          kinds:
+            - Pod
+    validate:
+      message: "Default namespace is not allowed"
+      pattern:
+        metadata:
+          namespace: "!default"
+  - name: validate-podcontroller-namespace
+    match:
+      any:
+      - resources:
+          kinds:
+          - DaemonSet
+          - Deployment
+          - Job
+          - StatefulSet
+    validate:
+      message: "Default namespace is not allowed"
+      pattern:
+        metadata:
+          namespace: "!default"

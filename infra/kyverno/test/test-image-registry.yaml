@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: agg
+  name: verbs
   namespace: ssi
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: agg
+      name: verbs
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -16,38 +16,29 @@ spec:
   template:
     metadata:
       labels:
-        name: agg
+        name: verbs
     spec:
       imagePullSecrets:
         - name: my-github
       containers:
-        - name: agg
-          image: ghcr.io/murielparaire/ssi/aggregator:latest
+        - name: verbs
+          image: docker.io/fteychene/cloud-cadavre-exquis-provider:latest
           imagePullPolicy: Always
-          resources:
-            requests:
-              memory: "100Mi"
-              cpu: "300m"
-          env:
-            - name: VERBS_URL
-              value: "http://verbs.ssi.svc.cluster.local:3001"
-            - name: NOUNS_URL
-              value: "http://nouns.ssi.svc.cluster.local:3002"
           ports:
-            - name: aggs-port
-              containerPort: 3000
+            - name: verbs-port
+              containerPort: 3001
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /
-              port: 3000
+              port: 3001
             initialDelaySeconds: 15
             timeoutSeconds: 3
             periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /
-              port: 3000
+              port: 3001
             initialDelaySeconds: 30
             timeoutSeconds: 3
             periodSeconds: 10

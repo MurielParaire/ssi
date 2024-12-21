@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-liveness
+  namespace: ssi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: test-liveness
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: test-liveness
+    spec:
+      imagePullSecrets:
+        - name: my-github
+      containers:
+        - name: test-liveness
+          image: ghcr.io/murielparaire/ssi/verbs:latest
+          imagePullPolicy: Always
+          ports:
+            - name: test-port
+              containerPort: 3001
+              protocol: TCP
