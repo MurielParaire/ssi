@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: agg-ingress
+  namespace: ssi
+spec:
+  rules:
+    - host: agg.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: agg
+                port:
+                  name: http-agg

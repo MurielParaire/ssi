@@ -6,6 +6,36 @@
 To execute and test this project, you will need a kubernetes cluster running.
 It has been tested with a k3d cluster running locally as well as have helm installed.
 
+# Istio
+
+[Install Istio](https://istio.io/latest/docs/setup/install/helm/) using helm:
+```
+helm repo add istio https://istio-release.storage.googleapis.com/charts
+helm repo update
+helm install istio-base istio/base -n istio-system --set defaultRevision=default --create-namespace
+helm install istiod istio/istiod -n istio-system --wait
+```
+
+Install the necessary CRDs to add a Gateway API:
+```
+kubectl get crd gateways.gateway.networking.k8s.io &> /dev/null || \
+{ kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref=v1.2.0" | kubectl apply -f -; }
+```
+
+For the gateway api to work, you will need to remove traefik (if you have it):
+```
+kubectl -n kube-system delete deployment traefik
+kubectl -n kube-system delete svc traefik
+```
+
+Install kiali to visualize Istio
+
+```
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.24/samples/addons/kiali.yaml
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.24/samples/addons/prometheus.yaml
+```
+
+
 # Requirements
 
 A web application will be deployed. It contains:  
@@ -30,7 +60,7 @@ and then you can connect to the aggregator at: http://<EXTERNAL_IP>:8080.
 
 # Kyverno
 
-Install kyverno using helm:
+[Install kyverno](https://kyverno.io/docs/installation/methods/) using helm:
 ```
 helm repo add kyverno https://kyverno.github.io/kyverno
 helm repo update
@@ -73,7 +103,7 @@ kubectl exec <podname> -n ssi -- id
 
 # Falco
 
-Install Falco
+[Install Falco](https://falco.org/blog/extend-falco-outputs-with-falcosidekick/)
 ```
 helm repo add falcosecurity https://falcosecurity.github.io/charts
 helm repo update

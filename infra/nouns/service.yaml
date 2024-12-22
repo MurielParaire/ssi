@@ -6,8 +6,8 @@ metadata:
 spec:
   selector:
     name: nouns
+    app: nouns
   ports:
-    - name: nouns-port
-      port: 3002
+    - port: 3002
       protocol: TCP
       targetPort: 3002

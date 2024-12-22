@@ -35,6 +35,7 @@ spec:
           - Deployment
           - Job
           - StatefulSet
+          - Pod
     validate:
       message: "Default namespace is not allowed"
       pattern:

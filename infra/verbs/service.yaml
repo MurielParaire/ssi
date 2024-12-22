@@ -6,8 +6,8 @@ metadata:
 spec:
   selector:
     name: verbs
+    app: verbs
   ports:
-    - name: verbs-port
-      port: 3001
+    - port: 3001
       protocol: TCP
       targetPort: 3001

@@ -8,6 +8,7 @@ spec:
   selector:
     matchLabels:
       name: nouns
+      app: nouns
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -17,16 +18,15 @@ spec:
     metadata:
       labels:
         name: nouns
+        app: nouns
+        version: v1
     spec:
-      imagePullSecrets:
-        - name: my-github
       containers:
         - name: nouns
           image: ghcr.io/murielparaire/ssi/nouns:latest
           imagePullPolicy: Always
           ports:
-            - name: nouns-port
-              containerPort: 3002
+            - containerPort: 3002
               protocol: TCP
           livenessProbe:
             httpGet:

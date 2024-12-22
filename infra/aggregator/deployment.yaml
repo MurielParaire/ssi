@@ -17,9 +17,10 @@ spec:
     metadata:
       labels:
         name: agg
+        app: agg
+        version: v1
     spec:
-      imagePullSecrets:
-        - name: my-github
+      serviceAccountName: agg
       containers:
         - name: agg
           image: ghcr.io/murielparaire/ssi/aggregator:latest
@@ -34,8 +35,7 @@ spec:
             - name: NOUNS_URL
               value: "http://nouns.ssi.svc.cluster.local:3002"
           ports:
-            - name: aggs-port
-              containerPort: 3000
+            - containerPort: 3000
               protocol: TCP
           livenessProbe:
             httpGet:

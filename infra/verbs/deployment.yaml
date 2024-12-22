@@ -8,6 +8,7 @@ spec:
   selector:
     matchLabels:
       name: verbs
+      app: verbs
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -17,16 +18,15 @@ spec:
     metadata:
       labels:
         name: verbs
+        app: verbs
+        version: v1
     spec:
-      imagePullSecrets:
-        - name: my-github
       containers:
         - name: verbs
           image: ghcr.io/murielparaire/ssi/verbs:latest
           imagePullPolicy: Always
           ports:
-            - name: verbs-port
-              containerPort: 3001
+            - containerPort: 3001
               protocol: TCP
           livenessProbe:
             httpGet:

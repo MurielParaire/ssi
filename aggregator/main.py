@@ -18,7 +18,7 @@ def aggregate():
         noun = response.json()
         return f"<p>{verb} {noun}</p>"
     except:
-        return f"<p>An error occured :c {MS_VERBS}{MS_NOUNS}</p>"
+        return f"<p>An error occured :c</p>"
 
 
 

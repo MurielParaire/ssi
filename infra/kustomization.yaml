@@ -3,6 +3,10 @@ kind: Kustomization
 
 resources:
   - namespace.yaml
+  - istio/peer-authentication.yaml
+  - istio/authorization-policy.yaml
+  - istio/gateway.yaml
+  - istio/http-route.yaml
   - kyverno/admission/disallow-default-namespace.yaml
   - kyverno/admission/verify-image-registry.yaml
   - kyverno/admission/verify-liveness-probe.yaml
@@ -14,3 +18,4 @@ resources:
   - nouns/service.yaml
   - aggregator/deployment.yaml
   - aggregator/service.yaml
+  - aggregator/ingress.yaml
