@@ -26,4 +26,4 @@ spec:
             all:
             - key: livenessProbe
               operator: AllNotIn
-              value: "*"
+              value: "{{ element.keys(@)[] }}"

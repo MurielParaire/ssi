@@ -7,7 +7,7 @@ spec:
   gatewayClassName: istio
   listeners:
   - name: http
-    hostname: "*.local"
+    hostname: "app.local"
     port: 80
     protocol: HTTP
     allowedRoutes:

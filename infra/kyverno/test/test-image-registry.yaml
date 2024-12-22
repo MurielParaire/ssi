@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: verbs
+  name: test-image
   namespace: ssi
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: verbs
+      name: test-image
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -16,16 +16,16 @@ spec:
   template:
     metadata:
       labels:
-        name: verbs
+        name: test-image
     spec:
       imagePullSecrets:
         - name: my-github
       containers:
-        - name: verbs
+        - name: test-image
           image: docker.io/fteychene/cloud-cadavre-exquis-provider:latest
           imagePullPolicy: Always
           ports:
-            - name: verbs-port
+            - name: test-image-port
               containerPort: 3001
               protocol: TCP
           livenessProbe:
